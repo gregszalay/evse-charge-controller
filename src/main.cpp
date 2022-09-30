@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "ExampleWifiClient.h"
 
 #define PWM_PIN 16
 #define ADC_PIN 5
@@ -63,6 +64,7 @@ void setup()
 {
   Serial.begin(115200);
   delay(100);
+  ExampleWifiClient::setup();
   // mywifi::setup();
   // configure LED PWM functionalitites
 
@@ -78,4 +80,5 @@ void setup()
 
 void loop()
 {
+  ExampleWifiClient::loop();
 }
