@@ -1,13 +1,20 @@
 #include <Arduino.h>
-#include "ExampleWifiClient.h"
+// #include "ExampleWifiClient.h"
 
 #define PWM_PIN 16
-#define ADC_PIN 5
+#define PWM_PIN_2 17
+#define TRIG_PIN 39
+#define ADC_PIN 36
+#define DAC_PIN 25
 
 // setting PWM properties
 const int freq = 1000;
 const int ledChannel = 0;
 const int resolution = 8;
+
+const int freq_2 = 1000;
+const int ledChannel_2 = 2;
+const int resolution_2 = 8;
 
 // ADC
 #include <ESP32AnalogRead.h>
@@ -18,67 +25,49 @@ static void PWM_TASK(void *)
 {
   while (1)
   {
-    // changing the LED brightness with PWM
-    ledcWrite(ledChannel, 100);
-    delay(15);
-    // // increase the LED brightness
-    // for (int dutyCycle = 0; dutyCycle <= 255; dutyCycle++)
-    // {
-    // }
-
-    // // decrease the LED brightness
-    // for (int dutyCycle = 255; dutyCycle >= 0; dutyCycle--)
-    // {
-    //   // changing the LED brightness with PWM
-    //   ledcWrite(ledChannel, dutyCycle);
-    //   delay(15);
-    // }
-    // delay(10);
+    ledcWrite(ledChannel, 200);
+    ledcWrite(ledChannel_2, 200);
+    delay(5);
     taskYIELD();
   }
 }
 
-uint64_t iterations = 0;
-float max_adc = 0.0;
+volatile uint16_t cp_val = 0;
+uint64_t iter = 0;
 
-static void ADC_TASK(void *)
+void IRAM_ATTR isr()
 {
-  while (1)
-  {
-
-    delay(10);
-    iterations++;
-
-    float current = adc.readVoltage();
-    if (current > max_adc /* || (iterations % 5000) == 0 */)
-    {
-      max_adc = current;
-      Serial.println("Voltage MAX = " + String(max_adc));
-    }
-    // delay(10);
-    taskYIELD();
-  }
+  // cp_val = adc.readVoltage();
+  cp_val = analogRead(ADC_PIN);
+  dacWrite(DAC_PIN, cp_val/16);
+  iter++;
 }
 
 void setup()
 {
   Serial.begin(115200);
+
   delay(100);
-  ExampleWifiClient::setup();
-  // mywifi::setup();
-  // configure LED PWM functionalitites
+  adc.attach(ADC_PIN);
 
-  ledcSetup(ledChannel, freq, resolution);
-  // attach the channel to the GPIO to be controlled
+  delay(100);
+  pinMode(TRIG_PIN, INPUT_PULLDOWN);
+
+  delay(100);
+  attachInterrupt(TRIG_PIN, isr, RISING);
+
+  delay(100);
   ledcAttachPin(PWM_PIN, ledChannel);
-
-  adc.attach(33);
+  ledcSetup(ledChannel, freq, resolution);
+  ledcAttachPin(PWM_PIN_2, ledChannel_2);
+  ledcSetup(ledChannel_2, freq_2, resolution_2);
 
   xTaskCreate(PWM_TASK, "PWM task", 1000, NULL, 1, NULL);
-  xTaskCreate(ADC_TASK, "ADC task", 1000, NULL, 1, NULL);
 }
 
 void loop()
 {
-  ExampleWifiClient::loop();
+  Serial.printf("Voltage MAX: %f Volts --", (float)((3.3 / 4096) * cp_val));
+  Serial.printf("iter: %llu\n", iter);
+  delay(10);
 }
