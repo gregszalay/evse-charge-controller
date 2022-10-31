@@ -57,19 +57,21 @@ namespace ExampleWifiClient
 
         // if the server's disconnected, stop the client:
 
-        if (!client.connected())
-        {
+        delay(50);
 
-            Serial.println();
+        // if (!client.connected())
+        // {
 
-            Serial.println("disconnecting from server.");
+        //     Serial.println();
 
-            client.stop();
+        //     Serial.println("disconnecting from server.");
 
-            // do nothing forevermore:
+        //     client.stop();
 
-            while (true)
-                ;
-        }
+        //     // do nothing forevermore:
+
+        //     while (true)
+        //         ;
+        // }
     }
 }
