@@ -1,3 +1,11 @@
+## Circuit
+
+https://tinyurl.com/2okg2vls
+https://tinyurl.com/22xwktd6
+https://tinyurl.com/29v7sfvd
+https://tinyurl.com/259mykdw
+
+
 ## GPIO INPUT/OUTPUT
 
 Below is a representation of a physical ESP module in a top-down view.
