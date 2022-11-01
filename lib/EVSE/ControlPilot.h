@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <functional>
 #include "interrupts.h"
+#include "taskify.h"
 
 typedef struct ControlPilotSettings
 {
@@ -83,24 +84,7 @@ public:
     }
 };
 
-class Loopable
-{
-public:
-    virtual void loop() {}
-};
-
-static void CP_TASK(void *param)
-{
-    while (1)
-    {
-        Loopable *loopable = (Loopable *)param;
-        loopable->loop();
-        delay(17);
-        taskYIELD();
-    }
-}
-
-class ControlPilot : public Loopable
+class ControlPilot
 {
 public:
     CPValues cp_values;
@@ -150,7 +134,7 @@ public:
         delay(100);
         attachInterrupt(cp_settings.CP_READ_EXT_TRIG_PIN, CP_POS_ADC_ISR, RISING);
         // attachInterrupt(CP_READ_EXT_TRIG_PIN, _CP_NEG_ADC_ISR, RISING);
-        xTaskCreate(CP_TASK, "CP Task", 10000, this, 1, NULL);
+        taskify("CP Task", 10000, this, 1, NULL);
     };
 
     void setDutyCycle(uint8_t new_value)
@@ -158,7 +142,7 @@ public:
         ledcWrite(cp_settings.PWM_CHANNEL, new_value);
     };
 
-    void loop() override
+    void loop()
     {
         this->iter_debug = iter;
         using namespace CPClassifier;
@@ -174,5 +158,6 @@ public:
             Serial.println("C_B state transition!");
             (this->C_B)();
         }
+        vTaskDelay(1);
     }
 };

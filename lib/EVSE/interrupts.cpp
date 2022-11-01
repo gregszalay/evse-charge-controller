@@ -6,6 +6,9 @@ volatile uint64_t iter = 0;
 
 void IRAM_ATTR CP_POS_ADC_ISR()
 {
-    cp_pos_raw = analogRead(36);
+    if (true/* iter % 100 == 0 */)
+    {
+        cp_pos_raw = analogRead(39);
+    }
     iter++;
 }
