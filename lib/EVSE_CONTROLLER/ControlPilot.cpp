@@ -1,9 +1,5 @@
 #include "ControlPilot.h"
 
-volatile uint64_t ControlPilot::iter = 0;
-volatile uint16_t ControlPilot::cp_pos_raw = 0;
-volatile uint16_t ControlPilot::cp_neg_raw = 0;
-
 bool CPClassifier::_12V(float cp_voltage)
 {
     return cp_voltage > _9V_BOTTOM && cp_voltage < _9V_TOP;

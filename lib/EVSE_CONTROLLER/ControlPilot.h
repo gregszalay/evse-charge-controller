@@ -1,6 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <functional>
+#include "interrupts.h"
 
 typedef struct ControlPilotSettings
 {
@@ -11,7 +12,6 @@ typedef struct ControlPilotSettings
     uint8_t PWM_OUT_PIN;
     uint8_t PWM_OUT_PIN_2;
     uint8_t CP_READ_EXT_TRIG_PIN;
-    uint8_t CONTACTOR_PIN;
     uint8_t CP_POS_ADC_PIN;
     uint8_t CP_NEG_ADC_PIN;
 } ControlPilotSettings_t;
@@ -43,32 +43,6 @@ namespace CPClassifier
 class CPCallbacks
 {
 public:
-    std::function<void(void)> A_B = []()
-    { Serial.println("A_B not overriden"); };
-    std::function<void(void)> B_C = []()
-    { Serial.println("B_C not overriden"); };
-    std::function<void(void)> B_D = []()
-    { Serial.println("B_D not overriden"); };
-    std::function<void(void)> C_B = []()
-    { Serial.println("C_B not overriden"); };
-    std::function<void(void)> D_B = []()
-    { Serial.println("D_B not overriden"); };
-    std::function<void(void)> A_E = []()
-    { Serial.println("A_E not overriden"); };
-    std::function<void(void)> B_E = []()
-    { Serial.println("B_E not overriden"); };
-    std::function<void(void)> C_E = []()
-    { Serial.println("C_E not overriden"); };
-    std::function<void(void)> D_E = []()
-    { Serial.println("D_E not overriden"); };
-    std::function<void(void)> A_F = []()
-    { Serial.println("A_F not overriden"); };
-    std::function<void(void)> B_F = []()
-    { Serial.println("B_F not overriden"); };
-    std::function<void(void)> C_F = []()
-    { Serial.println("C_F not overriden"); };
-    std::function<void(void)> D_F = []()
-    { Serial.println("D_F not overriden"); };
 };
 
 class CPValues
@@ -121,7 +95,7 @@ static void CP_TASK(void *param)
     {
         Loopable *loopable = (Loopable *)param;
         loopable->loop();
-        delay(7);
+        delay(17);
         taskYIELD();
     }
 }
@@ -130,26 +104,40 @@ class ControlPilot : public Loopable
 {
 public:
     CPValues cp_values;
-    static volatile uint16_t cp_pos_raw;
-    static volatile uint16_t cp_neg_raw;
     ControlPilotSettings_t cp_settings;
-    CPCallbacks cp_cbs;
+    CPCallbacks *cp_cbs = nullptr;
+    uint64_t iter_debug;
+    std::function<void()> A_B = [this]()
+    { Serial.println("A_B not overriden!"); };
+    std::function<void()> B_C = [this]()
+    { Serial.println("B_C not overriden!"); };
+    std::function<void()> B_D = [this]()
+    { Serial.println("B_D not overriden!"); };
+    std::function<void()> C_B = [this]()
+    { Serial.println("C_B not overriden!"); };
+    std::function<void()> D_B = [this]()
+    { Serial.println("D_B not overriden!"); };
+    std::function<void()> A_E = [this]()
+    { Serial.println("A_E not overriden!"); };
+    std::function<void()> B_E = [this]()
+    { Serial.println("B_E not overriden!"); };
+    std::function<void()> C_E = [this]()
+    { Serial.println("C_E not overriden!"); };
+    std::function<void()> D_E = [this]()
+    { Serial.println("D_E not overriden!"); };
+    std::function<void()> A_F = [this]()
+    { Serial.println("A_F not overriden!"); };
+    std::function<void()> B_F = [this]()
+    { Serial.println("B_F not overriden!"); };
+    std::function<void()> C_F = [this]()
+    { Serial.println("C_F not overriden!"); };
+    std::function<void()> D_F = [this]()
+    { Serial.println("D_F not overriden!"); };
 
-    static volatile uint64_t iter;
-    static void IRAM_ATTR CP_POS_ADC_ISR()
+    ControlPilot(ControlPilotSettings_t _cp_settings) : cp_settings(_cp_settings){};
+
+    void setup()
     {
-        cp_pos_raw = analogRead(36);
-        iter++;
-    }
-    // static void IRAM_ATTR CP_NEG_ADC_ISR()
-    // {
-    //     cp_neg_raw = analogRead(32);
-    //     iter++;
-    // }
-
-    ControlPilot(ControlPilotSettings_t _cp_settings, CPCallbacks _cp_cbs) : cp_settings(_cp_settings), cp_cbs(_cp_cbs)
-    {
-
         delay(100);
         pinMode(cp_settings.CP_READ_EXT_TRIG_PIN, INPUT_PULLDOWN);
 
@@ -160,32 +148,31 @@ public:
         ledcWrite(cp_settings.PWM_CHANNEL, cp_settings.PWM_DEFAULT_DUTY_CYCLE);
 
         delay(100);
-        attachInterrupt(cp_settings.CP_READ_EXT_TRIG_PIN, this->CP_POS_ADC_ISR, RISING);
+        attachInterrupt(cp_settings.CP_READ_EXT_TRIG_PIN, CP_POS_ADC_ISR, RISING);
         // attachInterrupt(CP_READ_EXT_TRIG_PIN, _CP_NEG_ADC_ISR, RISING);
-        xTaskCreate(CP_TASK, "CP Task", 1000, this, 1, NULL);
+        xTaskCreate(CP_TASK, "CP Task", 10000, this, 1, NULL);
     };
 
     void setDutyCycle(uint8_t new_value)
     {
-        ledcWrite(0, new_value);
+        ledcWrite(cp_settings.PWM_CHANNEL, new_value);
     };
 
     void loop() override
     {
-        if (!Serial)
-            Serial.begin(115200);
+        this->iter_debug = iter;
         using namespace CPClassifier;
         cp_values.setCPPos(cp_pos_raw);
         cp_values.setCPNeg(cp_neg_raw);
         if (_6V(cp_values.getCPPos()) && _9V(cp_values.getCPPosPrev()))
         {
             Serial.println("B_C state transition!");
-            this->cp_cbs.B_C();
+            (this->B_C)();
         }
         if (_9V(cp_values.getCPPos()) && _6V(cp_values.getCPPosPrev()))
         {
-            Serial.println("B_C state transition!");
-            this->cp_cbs.B_C();
+            Serial.println("C_B state transition!");
+            (this->C_B)();
         }
     }
 };

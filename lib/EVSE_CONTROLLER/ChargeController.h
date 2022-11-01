@@ -7,13 +7,12 @@
 
 ControlPilotSettings_t evse_cp_settings{
     .PWM_FREQ = 1000,
-    .PWM_DEFAULT_DUTY_CYCLE = 5,
+    .PWM_DEFAULT_DUTY_CYCLE = 100,
     .PWM_RESOLUTION = 8,
     .PWM_CHANNEL = 0,
     .PWM_OUT_PIN = 16,
     .PWM_OUT_PIN_2 = 17,
     .CP_READ_EXT_TRIG_PIN = 39,
-    .CONTACTOR_PIN = 5,
     .CP_POS_ADC_PIN = 36,
     .CP_NEG_ADC_PIN = 32,
 };
@@ -29,14 +28,13 @@ public:
     ControlPilot cp;
     ProximityPilot pp;
     Contactor cont;
-    CPCallbacks cbs;
 
-    ChargeController(int id) : cp(evse_cp_settings, cbs), pp(), cont(5)
+    ChargeController(int id) : cp(evse_cp_settings), pp(), cont(5)
     {
-        if (!Serial)
-            Serial.begin(115200);
-        this->cbs.B_C = [this]()
-        { this->cont.On(); };
         cont.Off();
+        this->cp.B_C = [this]()
+        { Serial.println("Contactor ON"); this->cont.On(); };
+        this->cp.C_B = [this]()
+        { Serial.println("Contactor OFF"); this->cont.Off(); };
     }
 };
