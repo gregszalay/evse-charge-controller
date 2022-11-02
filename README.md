@@ -5,6 +5,10 @@ https://tinyurl.com/22xwktd6
 https://tinyurl.com/29v7sfvd
 https://tinyurl.com/259mykdw
 
+https://tinyurl.com/2dm7u7qt
+https://tinyurl.com/24lqx3d3
+
+https://tinyurl.com/233tq6cn
 
 ## GPIO INPUT/OUTPUT
 
