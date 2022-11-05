@@ -31,7 +31,7 @@ void setup()
   Serial.begin(115200);
   Serial.println("Starting charge controller...");
   delay(100);
-  WIFI_API()->start(tcp_message_handlers);
+ // WIFI_API()->start(tcp_message_handlers);
   delay(100);
   evse.cp.setup();
 }
