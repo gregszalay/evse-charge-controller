@@ -2,11 +2,10 @@
 
 ControlPilotSettings_t evse_cp_settings{
     // TODO: put in global macros, 1 ESP can only handle 1 EVSE anyway
-    .PWM_FREQ = 10,
+    .PWM_FREQ = 1000,
     .PWM_DEFAULT_DUTY_CYCLE = 100,
     .PWM_RESOLUTION = 8,
-    .PWM_CHANNEL = 0
-};
+    .PWM_CHANNEL = 0};
 
 EVSE::EVSE(int id) : cp(evse_cp_settings), pp(), cont(5)
 {
@@ -15,12 +14,19 @@ EVSE::EVSE(int id) : cp(evse_cp_settings), pp(), cont(5)
 
     /**
      * @brief Set up CP state transition callbacks
-     * TODO
+     * TODO: implement callbacks & relating actions for all state transitions
      */
 
-    //TODO
+    this->cp.A_B = [this]()
+    {
+        Serial.println("EV connected!");
+    };
 
-    // Called on B -> C state transition:
+    this->cp.B_A = [this]()
+    {
+        Serial.println("EV disconnected!");
+    };
+
     this->cp.B_C = [this]()
     {
         if (!this->charging_allowed)
@@ -31,7 +37,7 @@ EVSE::EVSE(int id) : cp(evse_cp_settings), pp(), cont(5)
         Serial.println("Switching contactor ON");
         this->cont.On();
     };
-    // Called on C -> B state transition:
+
     this->cp.C_B = [this]()
     { Serial.println("Contactor OFF"); this->cont.Off(); };
 }

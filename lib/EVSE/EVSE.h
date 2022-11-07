@@ -7,6 +7,7 @@
 #include "taskify.h"
 
 class EVSE
+// TODO: make EVSE class singleton
 {
 private:
     bool charging_allowed = false;

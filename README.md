@@ -13,24 +13,24 @@
 
 Interactive simulation: https://tinyurl.com/2cwzpe9o
 
-![](docs/CP_PP.png)
+![CP_PP](docs/CP_PP.png)
 
 ### Contactor drive circuit (for charging)
 
 Interactive simulation: https://tinyurl.com/2aohd9gd
 
-![](docs/contactor.png)
+![contactor](docs/contactor.png)
 
 ## WiFi Control Interface
 
-Working principal: On boot, a TCP server will start and will be listening for client connections. Once a client is connected, it sends plain text messages to control the EVSE.
+Working principal: On boot, a TCP server will start and will be listening for client connections. Once a client is connected, it can send plain text messages to control the EVSE.
 
 API:
 
-| Message | Description                                                                   |
-| ------- | ----------------------------------------------------------------------------- |
-| start\n | Charging is permitted. Charging will start when the EV is properly connected. |
-| stop\n  | Charging is permitted. Charging will start when the EV is properly connected. |
+| Message | Description                                                                            |
+| ------- | -------------------------------------------------------------------------------------- |
+| start\n | Charging is permitted. Charging will start when the EV is properly connected.          |
+| stop\n  | Charging is not permitted. If charging is in progress, charging will stop immediately. |
 
 ## ESP32 GPIO designation
 
@@ -74,3 +74,8 @@ Below is a representation of a physical ESP module in a top-down view.
 | CONTACTOR_PIN        | Starts/stops the charging.                                                                                         |
 | CONTACTOR_ENABLE_PIN | Enables charging (safety step).                                                                                    |
 | CALIBRATE_BTN_PIN    | Automatic calibration feature (under development)                                                                  |
+
+## TODO
+
+- connector lock control
+- controller status (CP, PP, contactor) send over WiFi interface

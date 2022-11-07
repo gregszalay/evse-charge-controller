@@ -29,7 +29,6 @@ void WifiAPI::start(std::map<std::string, std::function<uint8_t()>> *tcp_message
     Serial.printf("%s", "WiFi connected");
     myWifiServer->begin();
     Serial.printf("%s", "Server started");
-    // Print the IP address
     Serial.printf("%s", WiFi.localIP().toString().c_str());
     // Offload this->loop() calls to separate FreeRTOS task
     taskify("WIFI Task", 10000, this, 1, NULL);

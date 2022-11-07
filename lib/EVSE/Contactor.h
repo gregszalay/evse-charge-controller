@@ -13,17 +13,17 @@ public:
     {
         pinMode(contactorPin, OUTPUT);
     }
-    void On()
+    inline void On()
     {
         digitalWrite(contactorPin, HIGH);
         isOn = true;
     };
-    void Off()
+    inline void Off()
     {
         digitalWrite(contactorPin, LOW);
         isOn = false;
     };
-    bool getIsOn()
+    inline bool getIsOn()
     {
         return isOn;
     }

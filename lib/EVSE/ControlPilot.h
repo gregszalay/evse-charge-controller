@@ -15,18 +15,18 @@ typedef struct ControlPilotSettings
 
 namespace CPClassifier
 {
-    extern float _12V_TOP;
-    extern float _12V_BOTTOM;
-    extern float _9V_TOP;
-    extern float _9V_BOTTOM;
-    extern float _6V_TOP;
-    extern float _6V_BOTTOM;
-    extern float _3V_TOP;
-    extern float _3V_BOTTOM;
-    extern float _0V_TOP;
-    extern float _0V_BOTTOM;
-    extern float _neg_12V_TOP;
-    extern float _neg_12V_BOTTOM;
+    extern float _13V;
+    extern float _11V;
+    extern float _10V;
+    extern float _8V;
+    extern float _7V;
+    extern float _5V;
+    extern float _4V;
+    extern float _2V;
+    extern float _1V;
+    extern float _neg_1V;
+    extern float _neg_13V;
+    extern float _neg_11V;
 
     bool _12V(float cp_voltage);
     bool _9V(float cp_voltage);
@@ -89,6 +89,8 @@ public:
     uint64_t iter_debug;
     std::function<void()> A_B = [this]()
     { Serial.println("A_B not overriden!"); };
+    std::function<void()> B_A = [this]()
+    { Serial.println("A_B not overriden!"); };
     std::function<void()> B_C = [this]()
     { Serial.println("B_C not overriden!"); };
     std::function<void()> B_D = [this]()
@@ -143,27 +145,27 @@ public:
 
     // void calibrateInner()
     // {
-    //     Serial.println("Waiting for _12V_TOP");
+    //     Serial.println("Waiting for _13V");
     //     if (!digitalRead(27))
-    //         CPClassifier::_12V_TOP
+    //         CPClassifier::_13V
 
     int counter = 0;
     bool iscalibrated = false;
 
     struct
     {
-        float _12V_TOP_c = -1;
-        float _12V_BOTTOM_c = -1;
-        float _9V_TOP_c = -1;
-        float _9V_BOTTOM_c = -1;
-        float _6V_TOP_c = -1;
-        float _6V_BOTTOM_c = -1;
-        float _3V_TOP_c = -1;
-        float _3V_BOTTOM_c = -1;
-        float _0V_TOP_c = -1;
-        float _0V_BOTTOM_c = -1;
-        float _neg_12V_TOP_c = -1;
-        float _neg_12V_BOTTOM_c = -1;
+        float _13V_c = -1;
+        float _11V_c = -1;
+        float _10V_c = -1;
+        float _8V_c = -1;
+        float _7V_c = -1;
+        float _5V_c = -1;
+        float _4V_c = -1;
+        float _2V_c = -1;
+        float _1V_c = -1;
+        float _neg_1V_c = -1;
+        float _neg_13V_c = -1;
+        float _neg_11V_c = -1;
     } calibratedvalues;
 
     void calibrate()
@@ -173,93 +175,93 @@ public:
         switch (counter)
         {
         case 0:
-            Serial.println("Waiting for _12V_TOP");
+            Serial.println("Waiting for _13V");
             break;
         case 1:
-            Serial.println("Waiting for _12V_BOTTOM");
+            Serial.println("Waiting for _11V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._12V_TOP_c == -1)
-                calibratedvalues._12V_TOP_c = cp_values.getCPPos();
+            if (calibratedvalues._13V_c == -1)
+                calibratedvalues._13V_c = cp_values.getCPPos();
             break;
         case 2:
-            Serial.println("Waiting for _9V_TOP");
+            Serial.println("Waiting for _10V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._12V_BOTTOM_c == -1)
-                calibratedvalues._12V_BOTTOM_c = cp_values.getCPPos();
+            if (calibratedvalues._11V_c == -1)
+                calibratedvalues._11V_c = cp_values.getCPPos();
             break;
         case 3:
-            Serial.println("Waiting for _9V_BOTTOM");
+            Serial.println("Waiting for _8V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._9V_TOP_c == -1)
-                calibratedvalues._9V_TOP_c = cp_values.getCPPos();
+            if (calibratedvalues._10V_c == -1)
+                calibratedvalues._10V_c = cp_values.getCPPos();
             break;
         case 4:
-            Serial.println("Waiting for _6V_TOP");
+            Serial.println("Waiting for _7V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._9V_BOTTOM_c == -1)
-                calibratedvalues._9V_BOTTOM_c = cp_values.getCPPos();
+            if (calibratedvalues._8V_c == -1)
+                calibratedvalues._8V_c = cp_values.getCPPos();
             break;
         case 5:
-            Serial.println("Waiting for _6V_BOTTOM");
+            Serial.println("Waiting for _5V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._6V_TOP_c == -1)
-                calibratedvalues._6V_TOP_c = cp_values.getCPPos();
+            if (calibratedvalues._7V_c == -1)
+                calibratedvalues._7V_c = cp_values.getCPPos();
             break;
         case 6:
-            Serial.println("Waiting for _3V_TOP");
+            Serial.println("Waiting for _4V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._6V_BOTTOM_c == -1)
-                calibratedvalues._6V_BOTTOM_c = cp_values.getCPPos();
+            if (calibratedvalues._5V_c == -1)
+                calibratedvalues._5V_c = cp_values.getCPPos();
             break;
         case 7:
-            Serial.println("Waiting for _3V_BOTTOM");
+            Serial.println("Waiting for _2V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._3V_TOP_c == -1)
-                calibratedvalues._3V_TOP_c = cp_values.getCPPos();
+            if (calibratedvalues._4V_c == -1)
+                calibratedvalues._4V_c = cp_values.getCPPos();
             break;
         case 8:
-            Serial.println("Waiting for _0V_TOP");
+            Serial.println("Waiting for _1V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._3V_BOTTOM_c == -1)
-                calibratedvalues._3V_BOTTOM_c = cp_values.getCPPos();
+            if (calibratedvalues._2V_c == -1)
+                calibratedvalues._2V_c = cp_values.getCPPos();
             break;
         case 9:
-            Serial.println("Waiting for _0V_BOTTOM");
+            Serial.println("Waiting for _neg_1V");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._0V_TOP_c == -1)
-                calibratedvalues._0V_TOP_c = cp_values.getCPPos();
+            if (calibratedvalues._1V_c == -1)
+                calibratedvalues._1V_c = cp_values.getCPPos();
             break;
         case 10:
             Serial.println("Finished!");
             cp_values.setCPPos(cp_pos_raw);
-            if (calibratedvalues._0V_BOTTOM_c == -1)
-                calibratedvalues._0V_BOTTOM_c = cp_values.getCPPos();
+            if (calibratedvalues._neg_1V_c == -1)
+                calibratedvalues._neg_1V_c = cp_values.getCPPos();
             iscalibrated = true;
-            CPClassifier::_12V_TOP = calibratedvalues._12V_TOP_c;
-            CPClassifier::_12V_BOTTOM = calibratedvalues._12V_BOTTOM_c;
-            CPClassifier::_9V_TOP = calibratedvalues._9V_TOP_c;
-            CPClassifier::_9V_BOTTOM = calibratedvalues._9V_BOTTOM_c;
-            CPClassifier::_6V_TOP = calibratedvalues._6V_TOP_c;
-            CPClassifier::_6V_BOTTOM = calibratedvalues._6V_BOTTOM_c;
-            CPClassifier::_3V_TOP = calibratedvalues._3V_TOP_c;
-            CPClassifier::_3V_BOTTOM = calibratedvalues._3V_BOTTOM_c;
-            CPClassifier::_0V_TOP = calibratedvalues._0V_TOP_c;
-            CPClassifier::_0V_BOTTOM = calibratedvalues._0V_BOTTOM_c;
-            CPClassifier::_neg_12V_TOP = calibratedvalues._neg_12V_TOP_c;
-            CPClassifier::_neg_12V_BOTTOM = calibratedvalues._neg_12V_BOTTOM_c;
-            CPClassifier::_12V_TOP;
-            Serial.printf("CPClassifier::_12V_TOP: %f\n", CPClassifier::_12V_TOP);
-            Serial.printf("CPClassifier::_12V_BOTTOM: %f\n", CPClassifier::_12V_BOTTOM);
-            Serial.printf("CPClassifier::_9V_TOP: %f\n", CPClassifier::_9V_TOP);
-            Serial.printf("CPClassifier::_9V_BOTTOM: %f\n", CPClassifier::_9V_BOTTOM);
-            Serial.printf("CPClassifier::_6V_TOP: %f\n", CPClassifier::_6V_TOP);
-            Serial.printf("CPClassifier::_6V_BOTTOM: %f\n", CPClassifier::_6V_BOTTOM);
-            Serial.printf("CPClassifier::_3V_TOP: %f\n", CPClassifier::_3V_TOP);
-            Serial.printf("CPClassifier::_3V_BOTTOM: %f\n", CPClassifier::_3V_BOTTOM);
-            Serial.printf("CPClassifier::_0V_TOP: %f\n", CPClassifier::_0V_TOP);
-            Serial.printf("CPClassifier::_0V_BOTTOM: %f\n", CPClassifier::_0V_BOTTOM);
-            Serial.printf("CPClassifier::_neg_12V_TOP: %f\n", CPClassifier::_neg_12V_TOP);
-            Serial.printf("CPClassifier::_neg_12V_BOTTOM: %f\n", CPClassifier::_neg_12V_BOTTOM);
+            CPClassifier::_13V = calibratedvalues._13V_c;
+            CPClassifier::_11V = calibratedvalues._11V_c;
+            CPClassifier::_10V = calibratedvalues._10V_c;
+            CPClassifier::_8V = calibratedvalues._8V_c;
+            CPClassifier::_7V = calibratedvalues._7V_c;
+            CPClassifier::_5V = calibratedvalues._5V_c;
+            CPClassifier::_4V = calibratedvalues._4V_c;
+            CPClassifier::_2V = calibratedvalues._2V_c;
+            CPClassifier::_1V = calibratedvalues._1V_c;
+            CPClassifier::_neg_1V = calibratedvalues._neg_1V_c;
+            CPClassifier::_neg_13V = calibratedvalues._neg_13V_c;
+            CPClassifier::_neg_11V = calibratedvalues._neg_11V_c;
+            CPClassifier::_13V;
+            Serial.printf("CPClassifier::_13V: %f\n", CPClassifier::_13V);
+            Serial.printf("CPClassifier::_11V: %f\n", CPClassifier::_11V);
+            Serial.printf("CPClassifier::_10V: %f\n", CPClassifier::_10V);
+            Serial.printf("CPClassifier::_8V: %f\n", CPClassifier::_8V);
+            Serial.printf("CPClassifier::_7V: %f\n", CPClassifier::_7V);
+            Serial.printf("CPClassifier::_5V: %f\n", CPClassifier::_5V);
+            Serial.printf("CPClassifier::_4V: %f\n", CPClassifier::_4V);
+            Serial.printf("CPClassifier::_2V: %f\n", CPClassifier::_2V);
+            Serial.printf("CPClassifier::_1V: %f\n", CPClassifier::_1V);
+            Serial.printf("CPClassifier::_neg_1V: %f\n", CPClassifier::_neg_1V);
+            Serial.printf("CPClassifier::_neg_13V: %f\n", CPClassifier::_neg_13V);
+            Serial.printf("CPClassifier::_neg_11V: %f\n", CPClassifier::_neg_11V);
             break;
         default:
             break;
@@ -280,21 +282,54 @@ public:
             counter++;
         }
 #endif
-        // TODO negative CP
         this->iter_debug = iter_pos;
         using namespace CPClassifier;
         cp_values.setCPPos(cp_pos_raw);
         cp_values.setCPNeg(cp_neg_raw);
+
+        if (!_neg_12V(cp_values.getCPNeg()))
+        {
+            Serial.println("Illegal state! Negative voltage error.");
+        }
+
+        if (_9V(cp_values.getCPPos()) && _12V(cp_values.getCPPosPrev()))
+        {
+            Serial.println("A-->B state transition!");
+            (this->A_B)();
+        }
+
         if (_6V(cp_values.getCPPos()) && _9V(cp_values.getCPPosPrev()))
         {
-            Serial.println("B_C state transition!");
+            Serial.println("B-->C state transition!");
             (this->B_C)();
         }
+
         if (_9V(cp_values.getCPPos()) && _6V(cp_values.getCPPosPrev()))
         {
-            Serial.println("C_B state transition!");
+            Serial.println("C-->B state transition!");
             (this->C_B)();
         }
+
+        if (_12V(cp_values.getCPPos()) && _9V(cp_values.getCPPosPrev()))
+        {
+            Serial.println("B-->A state transition!");
+            (this->B_A)();
+        }
+
+        if (_3V(cp_values.getCPPos()) && _9V(cp_values.getCPPosPrev()))
+        {
+            Serial.println("B-->D state transition!");
+            (this->B_D)();
+        }
+
+        if (_9V(cp_values.getCPPos()) && _3V(cp_values.getCPPosPrev()))
+        {
+            Serial.println("D-->B state transition!");
+            (this->D_B)();
+        }
+
+        // TODO: error state transitions
+
         vTaskDelay(1);
     }
 };

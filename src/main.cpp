@@ -7,6 +7,7 @@
 
 EVSE evse(1);
 
+// WiFi commands:
 const char *start_command = "start\n";
 const char *stop_command = "stop\n";
 
