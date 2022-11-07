@@ -3,6 +3,7 @@
 #include <functional>
 #include "interrupts.h"
 #include "taskify.h"
+#include "pins.h"
 
 typedef struct ControlPilotSettings
 {
@@ -10,11 +11,6 @@ typedef struct ControlPilotSettings
     uint8_t PWM_DEFAULT_DUTY_CYCLE;
     uint8_t PWM_RESOLUTION;
     uint8_t PWM_CHANNEL;
-    uint8_t PWM_OUT_PIN;
-    uint8_t PWM_OUT_PIN_2;
-    uint8_t CP_READ_EXT_TRIG_PIN;
-    uint8_t CP_POS_ADC_PIN;
-    uint8_t CP_NEG_ADC_PIN;
 } ControlPilotSettings_t;
 
 namespace CPClassifier
@@ -126,17 +122,17 @@ public:
         pinMode(27, INPUT_PULLUP);
 #endif
         delay(100);
-        pinMode(cp_settings.CP_READ_EXT_TRIG_PIN, INPUT_PULLDOWN);
+        pinMode(CP_POS_ADC_TRIG_PIN, INPUT_PULLDOWN);
 
         delay(100);
         ledcSetup(cp_settings.PWM_CHANNEL, cp_settings.PWM_FREQ, cp_settings.PWM_RESOLUTION);
-        ledcAttachPin(cp_settings.PWM_OUT_PIN, cp_settings.PWM_CHANNEL);
-        ledcAttachPin(cp_settings.PWM_OUT_PIN_2, cp_settings.PWM_CHANNEL);
+        ledcAttachPin(PWM_PIN, cp_settings.PWM_CHANNEL);
+        ledcAttachPin(PWM_PIN_2, cp_settings.PWM_CHANNEL);
         ledcWrite(cp_settings.PWM_CHANNEL, cp_settings.PWM_DEFAULT_DUTY_CYCLE);
 
         delay(100);
-        attachInterrupt(cp_settings.CP_READ_EXT_TRIG_PIN, CP_POS_ADC_ISR, RISING);
-        // attachInterrupt(CP_READ_EXT_TRIG_PIN, _CP_NEG_ADC_ISR, RISING);
+        attachInterrupt(CP_POS_ADC_TRIG_PIN, CP_POS_ADC_ISR, RISING);
+        attachInterrupt(CP_NEG_ADC_TRIG_PIN, CP_NEG_ADC_ISR, RISING);
         taskify("CP Task", 10000, this, 1, NULL);
     };
 
@@ -273,9 +269,9 @@ public:
     void loop()
     {
 #ifdef CALIBRATE_MODE
-        if (!digitalRead(27))
+        if (!digitalRead(CALIBRATE_BTN_PIN))
         {
-            while (!digitalRead(27))
+            while (!digitalRead(CALIBRATE_BTN_PIN))
             {
                 Serial.print(".");
                 vTaskDelay(100);
@@ -284,7 +280,8 @@ public:
             counter++;
         }
 #endif
-        this->iter_debug = iter;
+        // TODO negative CP
+        this->iter_debug = iter_pos;
         using namespace CPClassifier;
         cp_values.setCPPos(cp_pos_raw);
         cp_values.setCPNeg(cp_neg_raw);

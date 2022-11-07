@@ -1,15 +1,19 @@
 #include <Arduino.h>
 #include "WifiAPI.h"
+#include "pins.h"
 #include "EVSE.h"
 #include <functional>
 #include <map>
 
 EVSE evse(1);
 
+const char *start_command = "start\n";
+const char *stop_command = "stop\n";
+
 std::map<std::string, std::function<uint8_t()>> *tcp_message_handlers =
     new std::map<std::string, std::function<uint8_t()>>{
         /******************************************************************/
-        {"start\n",
+        {start_command,
          []() -> uint8_t
          {
            Serial.print("Starting charge");
@@ -17,7 +21,7 @@ std::map<std::string, std::function<uint8_t()>> *tcp_message_handlers =
            return 0;
          }},
         /******************************************************************/
-        {"stop\n",
+        {stop_command,
          []() -> uint8_t
          {
            Serial.print("Stopping charge");
@@ -30,8 +34,9 @@ void setup()
 {
   Serial.begin(115200);
   Serial.println("Starting charge controller...");
+  pinMode(CONTACTOR_ENABLE_PIN, HIGH);
   delay(100);
- // WIFI_API()->start(tcp_message_handlers);
+  WIFI_API()->start(tcp_message_handlers);
   delay(100);
   evse.cp.setup();
 }

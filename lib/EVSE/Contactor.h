@@ -8,19 +8,19 @@ private:
     bool isOn = false;
 
 public:
-    const int CONTACTOR_PIN;
-    Contactor(int _CONTACTOR_PIN) : CONTACTOR_PIN(_CONTACTOR_PIN)
+    const int contactorPin;
+    Contactor(int _contactorPin) : contactorPin(_contactorPin)
     {
-        pinMode(CONTACTOR_PIN, OUTPUT);
+        pinMode(contactorPin, OUTPUT);
     }
     void On()
     {
-        digitalWrite(CONTACTOR_PIN, HIGH);
+        digitalWrite(contactorPin, HIGH);
         isOn = true;
     };
     void Off()
     {
-        digitalWrite(CONTACTOR_PIN, LOW);
+        digitalWrite(contactorPin, LOW);
         isOn = false;
     };
     bool getIsOn()

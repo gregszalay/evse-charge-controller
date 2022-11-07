@@ -9,7 +9,7 @@ public:
 
 typedef struct ProximityPilotSettings
 {
-    uint8_t PP_PIN;
+    uint8_t ppPin;
 } ProximityPilotSettings_t;
 
 class ProximityPilot
