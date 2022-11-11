@@ -11,7 +11,7 @@
 
 ### Control Pilot (CP) and Proximity Pilot (PP) circuit for communication with EV
 
-Interactive simulation: https://tinyurl.com/2cwzpe9o
+Interactive simulation: https://tinyurl.com/2cvle84c
 
 ![CP_PP](docs/CP_PP.png)
 
