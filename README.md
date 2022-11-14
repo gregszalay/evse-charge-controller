@@ -27,10 +27,11 @@ Working principal: On boot, a TCP server will start and will be listening for cl
 
 API:
 
-| Message | Description                                                                            |
-| ------- | -------------------------------------------------------------------------------------- |
-| start\n | Charging is permitted. Charging will start when the EV is properly connected.          |
-| stop\n  | Charging is not permitted. If charging is in progress, charging will stop immediately. |
+| Message   | Description                                                                            |
+| --------- | -------------------------------------------------------------------------------------- |
+| start\n   | Charging is permitted. Charging will start when the EV is properly connected.          |
+| stop\n    | Charging is not permitted. If charging is in progress, charging will stop immediately. |
+| status?\n | Returns status information about the EVSE.                                             |
 
 ## ESP32 GPIO designation
 
@@ -39,27 +40,27 @@ Below is a representation of a physical ESP module in a top-down view.
 > You can use the "My Macro" column to note down what macro you use for that pin in your app
 > I've added some examples for the macros
 
-| Notes           | My Macro                 | GPIO      | #   | GPIO      | My Macro  | Notes              |
-| --------------- | ------------------------ | --------- | --- | --------- | --------- | ------------------ |
-| **3V3**         | X                        | **_3V3_** | 19  | **_GND_** | X         | **GND**            |
-| **RESET**       | X                        | **_EN_**  | 18  | **_23_**  |           |                    |
-| **INPUT_ONLY**  | CP_POS_ADC_PIN           | **_36_**  | 17  | **_22_**  |           |                    |
-| **INPUT_ONLY**  | CP_POS_ADC_TRIG_PIN      | **_39_**  | 16  | **_1_**   |           | **USB_PROG_DEBUG** |
-| **INPUT_ONLY**  | CP_NEG_ADC_PIN           | **_34_**  | 15  | **_3_**   |           | **USB_PROG_DEBUG** |
-| **INPUT_ONLY**  | CP_NEG_ADC_TRIG_PIN      | **_35_**  | 14  | **_21_**  |           |                    |
-|                 | PP_ADC_PIN               | **_32_**  | 13  | **_GND_** | X         | **GND**            |
-|                 |                          | **_33_**  | 12  | **_19_**  |           |                    |
-|                 |                          | **_25_**  | 11  | **_18_**  |           |                    |
-|                 |                          | **_26_**  | 10  | **_5_**   |           | **PWM_AT_BOOT**    |
-|                 | CONTACTOR_PIN (L)        | **_27_**  | 9   | **_17_**  | PWM_PIN_2 |                    |
-| **PWM_AT_BOOT** | CALIBRATE_BTN_PIN (H)    | **_14_**  | 8   | **_16_**  | PWM_PIN   |                    |
-|                 | CONTACTOR_ENABLE_PIN (L) | **_12_**  | 7   | **_4_**   |           |                    |
-| **GND**         | X                        | **_GND_** | 6   | **_0_**   | !         | **BOOT_H_PROG_L**  |
-|                 |                          | **_13_**  | 5   | **_2_**   |           |                    |
-| **FORBIDDEN**   |                          | **_9_**   | 4   | **_15_**  |           | **PWM_AT_BOOT**    |
-| **FORBIDDEN**   |                          | **_10_**  | 3   | **_8_**   |           | **FORBIDDEN**      |
-| **FORBIDDEN**   |                          | **_11_**  | 2   | **_7_**   |           | **FORBIDDEN**      |
-|                 |                          | **_5V_**  | 1   | **_6_**   |           | **FORBIDDEN**      |
+| Notes           | My Macro             | GPIO      | #   | GPIO      | My Macro  | Notes              |
+| --------------- | -------------------- | --------- | --- | --------- | --------- | ------------------ |
+| **3V3**         | X                    | **_3V3_** | 19  | **_GND_** | X         | **GND**            |
+| **RESET**       | X                    | **_EN_**  | 18  | **_23_**  |           |                    |
+| **INPUT_ONLY**  | CP_POS_ADC_PIN       | **_36_**  | 17  | **_22_**  |           |                    |
+| **INPUT_ONLY**  | CP_POS_ADC_TRIG_PIN  | **_39_**  | 16  | **_1_**   |           | **USB_PROG_DEBUG** |
+| **INPUT_ONLY**  | CP_NEG_ADC_PIN       | **_34_**  | 15  | **_3_**   |           | **USB_PROG_DEBUG** |
+| **INPUT_ONLY**  | CP_NEG_ADC_TRIG_PIN  | **_35_**  | 14  | **_21_**  |           |                    |
+|                 | PP_ADC_PIN           | **_32_**  | 13  | **_GND_** | X         | **GND**            |
+|                 |                      | **_33_**  | 12  | **_19_**  |           |                    |
+|                 |                      | **_25_**  | 11  | **_18_**  |           |                    |
+|                 |                      | **_26_**  | 10  | **_5_**   |           | **PWM_AT_BOOT**    |
+|                 | CONTACTOR_PIN        | **_27_**  | 9   | **_17_**  | PWM_PIN_2 |                    |
+| **PWM_AT_BOOT** | CALIBRATE_BTN_PIN    | **_14_**  | 8   | **_16_**  | PWM_PIN   |                    |
+|                 | CONTACTOR_ENABLE_PIN | **_12_**  | 7   | **_4_**   |           |                    |
+| **GND**         | X                    | **_GND_** | 6   | **_0_**   | !         | **BOOT_H_PROG_L**  |
+|                 |                      | **_13_**  | 5   | **_2_**   |           |                    |
+| **FORBIDDEN**   |                      | **_9_**   | 4   | **_15_**  |           | **PWM_AT_BOOT**    |
+| **FORBIDDEN**   |                      | **_10_**  | 3   | **_8_**   |           | **FORBIDDEN**      |
+| **FORBIDDEN**   |                      | **_11_**  | 2   | **_7_**   |           | **FORBIDDEN**      |
+|                 |                      | **_5V_**  | 1   | **_6_**   |           | **FORBIDDEN**      |
 
 ## GPIO description
 
