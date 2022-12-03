@@ -29,13 +29,21 @@ public:
     {
         pinMode(PP_ADC_PIN, INPUT_PULLDOWN);
         taskify("PP Measure Task", 10000, this, 1, NULL);
+        // xSemaphoreGive(xSemaphore); // TODO
     }
 
     void loop()
     {
-        uint16_t pp_voltage_raw = analogRead(PP_ADC_PIN);
-        pp_voltage = (float)((3.3f / 4096.0f) * pp_voltage_raw);
-        vTaskDelay(10);
+        if (xSemaphoreTake(xSemaphore, (TickType_t)10) == pdTRUE)
+        {
+            uint16_t pp_voltage_raw = analogRead(PP_ADC_PIN);
+            pp_voltage = (float)((3.3f / 4096.0f) * pp_voltage_raw);
+            vTaskDelay(100 / portTICK_PERIOD_MS);
+            xSemaphoreGive(xSemaphore);
+        }
+        else
+        {
+        }
     }
 
     CABLE getDetectedCableType()

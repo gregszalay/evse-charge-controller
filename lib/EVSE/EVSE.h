@@ -39,7 +39,6 @@ public:
         // Make sure the contactor is in an off state to start with
         cont.Off();
         setupCallbacks();
-        taskify("EVSE Task", 10000, this, 1, NULL);
     }
 
     void setupCallbacks();
@@ -47,6 +46,7 @@ public:
     {
         cp.start();
         pp.start();
+        taskify("EVSE Task", 10000, this, 1, NULL);
     }
     inline void setChargingAllowed(bool isAllowed)
     {

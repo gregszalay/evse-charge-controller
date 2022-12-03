@@ -65,8 +65,8 @@ public:
 
     inline void start()
     {
-        generator.start();
         voltage_reader.start();
+        generator.start();
         taskify("CP Task", 10000, this, 1, NULL);
     };
 

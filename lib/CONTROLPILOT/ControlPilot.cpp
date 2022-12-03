@@ -9,7 +9,7 @@ void ControlPilot::loop()
     CP_LEVELS min_prev = voltage_reader.getMinRangePrev();
 
     // Check diode presence: CP minimum voltage should be -12V
-    if (min != CP_LEVELS::RANGE_neg_12_V)
+    if (min != CP_LEVELS::RANGE_neg_12_V && generator.getDutyCyclePercent() != 100 && generator.getDutyCyclePercent() != 0)
     {
         Serial.println("Negative voltage error. Diode not present in vehicle.");
     }

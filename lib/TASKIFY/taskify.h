@@ -1,6 +1,8 @@
 #pragma once
 #include <Arduino.h>
 
+static SemaphoreHandle_t xSemaphore;
+
 template <typename T>
 void taskify(
     const char *const pcName,
@@ -9,11 +11,12 @@ void taskify(
     UBaseType_t uxPriority,
     TaskHandle_t *const pvCreatedTask)
 {
-    xTaskCreate([](void *param)
+   
+    xTaskCreatePinnedToCore([](void *param)
                 { while (1) {
                         T *obj = (T *)param;
                         obj->loop();
                         taskYIELD();
                     } },
-                pcName, usStackDepth, obj, uxPriority, pvCreatedTask);
+                pcName, usStackDepth, obj, uxPriority, pvCreatedTask, 1);
 }

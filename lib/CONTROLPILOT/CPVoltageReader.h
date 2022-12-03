@@ -42,7 +42,7 @@ class CPVoltageReader
         this->cp_min = new_cp_min;
     }
 
-    inline CP_LEVELS getRange(float voltage)
+    inline CP_LEVELS sortIntoBucketMax(float voltage)
     {
         if (voltage >= CP_11_V && voltage <= CP_13_V)
             return CP_LEVELS::RANGE_12_V;
@@ -54,7 +54,13 @@ class CPVoltageReader
             return CP_LEVELS::RANGE_3_V;
         else if (voltage >= CP_neg_1_V && voltage <= CP_1_V)
             return CP_LEVELS::RANGE_0_V;
-        else if (voltage >= CP_neg_11_V && voltage <= CP_neg_13_V)
+        else
+            return CP_LEVELS::RANGE_ILLEGAL;
+    }
+
+    inline CP_LEVELS sortIntoBucketMin(float voltage)
+    {
+        if (voltage >= CP_neg_11_V && voltage <= CP_neg_13_V)
             return CP_LEVELS::RANGE_neg_12_V;
         else
             return CP_LEVELS::RANGE_ILLEGAL;
@@ -63,11 +69,11 @@ class CPVoltageReader
 public:
     void start()
     {
-        // delay(100);
+        delay(100);
         pinMode(CP_POS_ADC_TRIG_PIN, INPUT_PULLDOWN);
-        pinMode(CP_NEG_ADC_TRIG_PIN, INPUT_PULLDOWN);
+        pinMode(CP_NEG_ADC_TRIG_PIN, INPUT);
 
-        // delay(100);
+        delay(100);
         attachInterrupt(CP_POS_ADC_TRIG_PIN, CP_MAX_ADC_ISR, RISING);
         attachInterrupt(CP_NEG_ADC_TRIG_PIN, CP_MIN_ADC_ISR, RISING);
         taskify("CPVoltageReader Task", 10000, this, 1, NULL);
@@ -77,10 +83,10 @@ public:
     inline float getMaxVPrev() { return this->cp_max_prev; }
     inline float getMinVPrev() { return this->cp_min_prev; }
 
-    inline CP_LEVELS getMaxRange() { return getRange(cp_max); }
-    inline CP_LEVELS getMinRange() { return getRange(cp_min); }
-    inline CP_LEVELS getMaxRangePrev() { return getRange(cp_max_prev); }
-    inline CP_LEVELS getMinRangePrev() { return getRange(cp_min_prev); }
+    inline CP_LEVELS getMaxRange() { return sortIntoBucketMax(cp_max); }
+    inline CP_LEVELS getMinRange() { return sortIntoBucketMin(cp_min); }
+    inline CP_LEVELS getMaxRangePrev() { return sortIntoBucketMax(cp_max_prev); }
+    inline CP_LEVELS getMinRangePrev() { return sortIntoBucketMin(cp_min_prev); }
 
     inline float getMaxPrev() { return this->cp_max_prev; }
     inline float getMinPrev() { return this->cp_min_prev; }
