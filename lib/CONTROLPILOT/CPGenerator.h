@@ -15,6 +15,7 @@ public:
         ledcSetup(CHANNEL, FREQ_HZ, RESOLUTION);
         ledcAttachPin(PWM_PIN, CHANNEL);
         ledcAttachPin(PWM_PIN_2, CHANNEL);
+        ledcAttachPin(PWM_PIN_3, CHANNEL);
         setDutyCyclePercent(DEFAULT_DUTY_CYCLE_PERCENT);
     }
 
@@ -29,29 +30,6 @@ public:
             Serial.println("Error: Illegal for duty cycle. Max duty cycle is 100%");
             return;
         }
-        // // No PWM, HIGH
-        // else if (percent == 100 && current_duty_cycle_percent < 100 &&
-        //          current_duty_cycle_percent > 0)
-        // {
-        //     ledcT
-        // }
-        // // No PWM, LOW
-        // else if (percent == 0)
-        // {
-        // }
-        // else
-        // {
-        //     // Need to (re)initialize PWM
-        //     if (current_duty_cycle_percent >= 100 && current_duty_cycle_percent == 0)
-        //     {
-        //         ledcSetup(CHANNEL, FREQ_HZ, RESOLUTION);
-        //         ledcAttachPin(PWM_PIN, CHANNEL);
-        //         ledcAttachPin(PWM_PIN_2, CHANNEL);
-        //     }
-        //     uint32_t new_value = uint32_t(255.0f / 100.0f * percent);
-        //     Serial.printf("Setting duty cycle to %u percent (%u resolution)\n", percent, new_value);
-        //     ledcWrite(CHANNEL, new_value);
-        // }
         uint32_t new_value = uint32_t(255.0f / 100.0f * percent);
         Serial.printf("Setting duty cycle to %u percent (%u resolution)\n", percent, new_value);
         ledcWrite(CHANNEL, new_value);

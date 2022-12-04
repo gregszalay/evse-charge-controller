@@ -30,7 +30,7 @@ void WifiAPI::start(std::map<std::string, std::function<uint8_t()>> *tcp_message
     myWifiServer->begin();
     Serial.printf("%s\n", "Server started");
     Serial.printf("%s\n", WiFi.localIP().toString().c_str());
-    // Offload this->loop() calls to separate FreeRTOS task
+    // TODO Offload this->loop() calls to separate FreeRTOS task
     // taskify("WIFI Task", 10000, this, 1, NULL);
 }
 
@@ -63,7 +63,7 @@ void WifiAPI::checkIncomingMessages()
                 continue;
             }
             uint8_t err_code = (*commandHandlers)[incoming_message]();
-            //writeToClient(i, err_code == 0 ? "OK" : "ERROR");
+            // TODO error handling
         }
     }
 }

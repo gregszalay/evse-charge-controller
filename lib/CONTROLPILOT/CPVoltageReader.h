@@ -2,14 +2,8 @@
 #include "taskify.h"
 #include "config.h"
 #include "pins.h"
+#include "interrupts.h"
 
-extern volatile uint16_t cp_max_raw;
-extern volatile uint64_t cp_max_count;
-void IRAM_ATTR CP_MAX_ADC_ISR();
-
-extern volatile uint16_t cp_min_raw;
-extern volatile uint64_t cp_min_count;
-void IRAM_ATTR CP_MIN_ADC_ISR();
 
 enum CP_LEVELS
 {

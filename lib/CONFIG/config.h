@@ -1,6 +1,6 @@
 // CP ADC config
 
-#define CP_13_V 3.2f
+#define CP_13_V 3.4f
 #define CP_11_V 2.75f
 #define CP_10_V 2.4f
 #define CP_8_V 1.9f

@@ -7,9 +7,15 @@
 
 #define PP_ADC_PIN 32
 
-#define CONTACTOR_PIN 27
-#define CALIBRATE_BTN_PIN 14
-#define CONTACTOR_ENABLE_PIN 12
-
+#define PWM_PIN_3 13
 #define PWM_PIN_2 17
 #define PWM_PIN 16
+
+#define CONTACTOR_PIN 33
+#define CONTACTOR_ENABLE_PIN 4
+
+#define CP_STATUS_A_PIN 25
+#define CP_STATUS_B_PIN 26
+#define CP_STATUS_C_PIN 27
+#define CONTACTOR_STATUS_PIN 14
+#define EVSE_STATUS_ERR_PIN 12

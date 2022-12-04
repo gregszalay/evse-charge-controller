@@ -9,13 +9,13 @@ void EVSE::setupCallbacks(){
     cp.callbacks.A_B = [this]()
     {
         Serial.println("EV connected!");
-        current_status.isEVConnected = 1;
+        status.isEVConnected = 1;
     };
 
     cp.callbacks.B_A = [this]()
     {
         Serial.println("EV disconnected!");
-        current_status.isEVConnected = 0;
+        status.isEVConnected = 0;
     };
 
     cp.callbacks.B_C = [this]()
@@ -28,7 +28,7 @@ void EVSE::setupCallbacks(){
         }
         Serial.println("Switching contactor ON");
         this->cont.On();
-        current_status.isCharging = 1;
+        status.isCharging = 1;
     };
 
     cp.callbacks.B_D = [this]()
@@ -42,7 +42,7 @@ void EVSE::setupCallbacks(){
         Serial.println("EV stopped charging.");
         Serial.println("Contactor OFF");
         this->cont.Off();
-        current_status.isCharging = 0;
+        status.isCharging = 0;
     };
 
     cp.callbacks.D_B = [this]()
@@ -54,48 +54,48 @@ void EVSE::setupCallbacks(){
     cp.callbacks.A_E = [this]()
     {
         Serial.println("**Error: short circuit detected.");
-        current_status.error = 1;
+        status.error = 1;
     };
 
     cp.callbacks.B_E = [this]()
     {
         Serial.println("**Error: short circuit detected.");
-        current_status.error = 1;
+        status.error = 1;
     };
 
     cp.callbacks.C_E = [this]()
     {
         Serial.println("**Error: short circuit detected.");
-        current_status.error = 1;
+        status.error = 1;
     };
 
     cp.callbacks.D_E = [this]()
     {
         Serial.println("**Error: short circuit detected.");
-        current_status.error = 1;
+        status.error = 1;
     };
 
     cp.callbacks.E_A = [this]()
     {
         Serial.println("Recovered from short circuit error.");
-        current_status.error = 0;
+        status.error = 0;
     };
 
     cp.callbacks.E_B = [this]()
     {
         Serial.println("Recovered from short circuit error.");
-        current_status.error = 0;
+        status.error = 0;
     };
 
     cp.callbacks.E_C = [this]()
     {
         Serial.println("Recovered from short circuit error.");
-        current_status.error = 0;
+        status.error = 0;
     };
 
     cp.callbacks.E_D = [this]()
     {
         Serial.println("Recovered from short circuit error.");
-        current_status.error = 0;
+        status.error = 0;
     };
 }
