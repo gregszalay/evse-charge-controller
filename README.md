@@ -150,8 +150,8 @@ example response: "status:1,0,0,0,"
 | Section     | Value              | Meaning                                                                                         |
 | ----------- | ------------------ | ----------------------------------------------------------------------------------------------- |
 | HEADER      | "metervalues"      | The response type is a meter values response                                                    |
-| CSV_VALUE_1 | fixed point number | Energy active net (kWh). Integer as a fraction fixed to 3 decimal places. E.g. 15627 is 15.627  |
-| CSV_VALUE_2 | fixed point number | Power active import (kW). Integer as a fraction fixed to 3 decimal places. E.g. 15627 is 15.627 |
+| CSV_VALUE_1 | fixed point number | Energy active net (Wh). Integer.  |
+| CSV_VALUE_2 | fixed point number | Power active import (W). Integer. |
 
 example response: "metervalues:16845,4567,"
 

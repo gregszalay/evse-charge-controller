@@ -76,7 +76,7 @@ public:
     {
         if (status.isCharging)
         {
-            status.power = 22000;
+            status.power = 22000;                     // default is 22kW
             status.energy += status.power / 3600 / 2; // assuming that this function is called every 500ms
             digitalWrite(CONTACTOR_STATUS_PIN, LOW);
         }
