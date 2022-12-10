@@ -90,6 +90,7 @@ public:
     void loop()
     {
         // Debugging
+        Serial.printf("ESP32 free HEAP: %uB, free PSRAM: %uB\n", ESP.getFreeHeap(), ESP.getFreePsram());
         Serial.printf("CP MAX: %f V -- CP MIN: %f V\n", cp.voltage_reader.getMaxV(), cp.voltage_reader.getMinV());
         Serial.printf("CP MAX RANGE: %d -- CP MIN RANGE: %d \n", cp.voltage_reader.getMaxRange(), cp.voltage_reader.getMinRange());
         Serial.printf("CP MAX ADC COUNT: %llu -- CP MIN ADC COUNT: %llu\n", cp_max_count, cp_min_count);

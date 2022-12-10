@@ -17,7 +17,6 @@ void WifiAPI::start(std::map<std::string, std::function<uint8_t()>> *tcp_message
 {
     commandHandlers = tcp_message_handlers;
     delay(10);
-    // Connect to WiFi network
     Serial.printf("Connecting to %s", SSID);
     WiFi.begin(SSID, WIFIPASSWORD);
     delay(2000);
@@ -50,6 +49,44 @@ void WifiAPI::checkIncomingMessages()
 {
     for (size_t i = 0; i < MAX_CLIENTS_ALLOWED; i++)
     {
+        if (this->clients_awaiting_auth[i] != nullptr && millis() > this->clients_auth_start_time_ms[i] + MAX_AUTH_TIME)
+        {
+            Serial.println("Authentication timeout!");
+            writeToUnauthenticatedClient(i, "Authentication timeout!");
+            this->clients_awaiting_auth[i]->stop();
+            delete this->clients_awaiting_auth[i];
+            this->clients_awaiting_auth[i] = NULL;
+            this->clientCountWaitingAuth--;
+            return;
+        }
+        if (this->clients_awaiting_auth[i] != nullptr && this->clients_awaiting_auth[i]->available() > 0)
+        {
+            std::stringstream lastMessage_ss;
+            while (this->clients_awaiting_auth[i] != nullptr && this->clients_awaiting_auth[i]->available() > 0)
+                lastMessage_ss << (char)this->clients_awaiting_auth[i]->read();
+            std::string incoming_message_str = lastMessage_ss.str().substr(0, lastMessage_ss.str().size() - 1); // remove the "\n" character
+            int incoming_message_size = incoming_message_str.size();
+            const char *incoming_message = incoming_message_str.c_str();
+            Serial.printf("Received PASSWORD message from client %d:\n%s\n", i, incoming_message); // PASSWORD print only for testing purposes
+            if (incoming_message_size != SERVERPASSWORDSIZE)
+            {
+                Serial.println("Authentication failed! Wrong password size!"); // Only for testing
+                Serial.printf("Actual size of incoming message: %d", incoming_message_size);
+                writeToUnauthenticatedClient(i, "Authentication failed!");
+            }
+            else if (strncmp(SERVERPASSWORD, incoming_message, SERVERPASSWORDSIZE) != 0)
+            {
+                Serial.println("Authentication failed!");
+                writeToUnauthenticatedClient(i, "Authentication failed! Wrong password!");
+            }
+            else
+            {
+                Serial.println("Authentication successful!");
+                registerAuthenticatedClient(i, this->clients_awaiting_auth[i]);
+                writeToAuthenticatedClient(i, "Authentication successful!");
+            }
+        }
+
         if (this->clients[i] != nullptr && this->clients[i]->available() > 0)
         {
             std::stringstream lastMessage_ss;
@@ -75,31 +112,55 @@ void WifiAPI::lookForNewClients()
     if (newClient)
     {
         Serial.printf("Found new client with ip %s.", newClient.localIP().toString().c_str());
-        registerNewClient(clientCount++, newClient);
-        Serial.printf("%s", "Client successfully registered!");
+        this->clientCountWaitingAuth++;
+        registerNewClientForAuth(this->clientCountWaitingAuth - 1, newClient);
+        Serial.printf("%s", "Waiting for client authentication...\n");
     }
 }
 
-void WifiAPI::registerNewClient(int clientId, WiFiClient newClient)
+void WifiAPI::registerNewClientForAuth(int clientId, WiFiClient newClient)
+{
+    if (NULL != clients_awaiting_auth[clientId] || NULL != clients[clientId])
+    {
+        Serial.printf("%s", "This connector client was already registered!\n");
+        return;
+    }
+    Serial.printf("Number of clients waiting for authentication: %d\n", clientCountWaitingAuth);
+    this->clients_awaiting_auth[clientId] = new WiFiClient(newClient);
+    this->clients_auth_start_time_ms[clientId] = millis();
+}
+
+void WifiAPI::registerAuthenticatedClient(int clientId, WiFiClient *newClient)
 {
     if (NULL != clients[clientId])
     {
-        Serial.printf("%s", "This connector client was already registered!");
+        Serial.printf("%s", "This connector client was already registered!\n");
         return;
     }
-    clientCount++;
-    Serial.printf("Number of clients: %d", clientCount);
-    this->clients[clientId] = new WiFiClient(newClient);
+    Serial.printf("Number of clients: %d", ++this->clientCount);
+    this->clients[clientId] = newClient;
+    // delete this->clients_awaiting_auth[clientId];
+    this->clients_awaiting_auth[clientId] = NULL;
 }
 
-void WifiAPI::writeToClient(int clientId, const char *message)
+void WifiAPI::writeToAuthenticatedClient(int clientId, const char *message)
 {
     if (this->clients[clientId] == NULL)
     {
-        Serial.printf("Cannot write to client %d, client is NULL!", clientId);
+        Serial.printf("Cannot write to client %d, client is NULL!\n", clientId);
         return;
     }
     this->clients[clientId]->println(message);
+}
+
+void WifiAPI::writeToUnauthenticatedClient(int clientId, const char *message)
+{
+    if (this->clients_awaiting_auth[clientId] == NULL)
+    {
+        Serial.printf("Cannot write to unauthenticated client %d, client is NULL!\n", clientId);
+        return;
+    }
+    this->clients_awaiting_auth[clientId]->println(message);
 }
 
 void WifiAPI::loop()

@@ -104,12 +104,13 @@ On boot, a TCP server will start and will be listening for client connections ov
 
 #### Messages sent to the EVSE
 
-| Message        | Description                                                                            |
-| -------------- | -------------------------------------------------------------------------------------- |
-| start\n        | Charging is permitted. Charging will start when the EV is properly connected.          |
-| stop\n         | Charging is not permitted. If charging is in progress, charging will stop immediately. |
-| status?\n      | Returns status information about the EVSE.                                             |
-| metervalues?\n | Returns status information about the EVSE.                                             |
+| Message          | Description                                                                                                          |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| [SERVERPASSWORD] | The 20 character ASCII password must be sent within 5s of first connection. This is set in the SERVERPASSWORD macro. |
+| start\n          | Charging is permitted. Charging will start when the EV is properly connected.                                        |
+| stop\n           | Charging is not permitted. If charging is in progress, charging will stop immediately.                               |
+| status?\n        | Returns status information about the EVSE.                                                                           |
+| metervalues?\n   | Returns status information about the EVSE.                                                                           |
 
 #### Responses sent by the EVSE
 
@@ -147,11 +148,11 @@ example response: "status:1,0,0,0,"
 
 ##### Response to **status?\n**
 
-| Section     | Value              | Meaning                                                                                         |
-| ----------- | ------------------ | ----------------------------------------------------------------------------------------------- |
-| HEADER      | "metervalues"      | The response type is a meter values response                                                    |
-| CSV_VALUE_1 | fixed point number | Energy active net (Wh). Integer.  |
-| CSV_VALUE_2 | fixed point number | Power active import (W). Integer. |
+| Section     | Value              | Meaning                                      |
+| ----------- | ------------------ | -------------------------------------------- |
+| HEADER      | "metervalues"      | The response type is a meter values response |
+| CSV_VALUE_1 | fixed point number | Energy active net (Wh). Integer.             |
+| CSV_VALUE_2 | fixed point number | Power active import (W). Integer.            |
 
 example response: "metervalues:16845,4567,"
 
@@ -203,4 +204,4 @@ Below is a representation of a physical ESP32 Development Board in a top-down vi
 
 - connector lock control
 - multi-level debug logging
-- be able to control PWM duty cycle over the WiFi interface 
+- be able to control PWM duty cycle over the WiFi interface

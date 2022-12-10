@@ -10,8 +10,10 @@ private:
 public:
     Contactor()
     {
+        // TODO: refine logic for safety control
         pinMode(CONTACTOR_ENABLE_PIN, OUTPUT);
         digitalWrite(CONTACTOR_ENABLE_PIN, HIGH);
+
         pinMode(CONTACTOR_PIN, OUTPUT);
     }
     inline void On()

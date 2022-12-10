@@ -8,9 +8,8 @@
 #include <string>
 
 EVSE evse;
-
-// this implementation currently only supports charge control by 1 client.
-// In the future, control bí multiple clients could be possible.
+// This implementation currently supports charge control by only 1 client.
+// In the future, control by multiple clients could be possible.
 #define EVSE_WIFI_CONTROL_CLIENT 0
 
 // WiFi commands:
@@ -30,7 +29,7 @@ std::map<std::string, std::function<uint8_t()>> *tcp_message_handlers =
            String result("");
            result += String("command") + String(":");
            result += String("OK") + String(",");
-           WIFI_API()->writeToClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
+           WIFI_API()->writeToAuthenticatedClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
            // TODO: implement error response
            return 0;
          }},
@@ -43,7 +42,7 @@ std::map<std::string, std::function<uint8_t()>> *tcp_message_handlers =
            String result("");
            result += String("command") + String(":");
            result += String("OK") + String(",");
-           WIFI_API()->writeToClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
+           WIFI_API()->writeToAuthenticatedClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
            // TODO: implement error response
            return 0;
          }},
@@ -57,7 +56,7 @@ std::map<std::string, std::function<uint8_t()>> *tcp_message_handlers =
            result += String(evse.status.isChargingEnabled) + String(",");
            result += String(evse.status.isCharging) + String(",");
            result += String(evse.status.error) + String(",");
-           WIFI_API()->writeToClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
+           WIFI_API()->writeToAuthenticatedClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
            return 0;
          }},
         {metervalues_req,
@@ -68,7 +67,7 @@ std::map<std::string, std::function<uint8_t()>> *tcp_message_handlers =
            result += String("metervalues") + String(":");
            result += String(evse.status.energy) + String(","); // Energy active net
            result += String(evse.status.power) + String(",");  // Power active import
-           WIFI_API()->writeToClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
+           WIFI_API()->writeToAuthenticatedClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
            return 0;
          }},
     };
