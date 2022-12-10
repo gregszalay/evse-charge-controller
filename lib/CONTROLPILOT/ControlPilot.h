@@ -10,7 +10,6 @@ class CPCallbacks
 {
 public:
     // Normal operation callbacks
-
     std::function<void()> A_B = [this]() // Vehicle connected
     { Serial.println("A_B not defined!"); };
 
@@ -58,11 +57,11 @@ public:
 
 class ControlPilot
 {
-public:
-    CPGenerator generator;
-    CPVoltageReader voltage_reader;
     CPCallbacks callbacks;
+    CPGenerator generator;
 
+public:
+    CPVoltageReader voltage_reader;
     inline void start()
     {
         voltage_reader.start();

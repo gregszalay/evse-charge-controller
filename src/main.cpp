@@ -52,10 +52,10 @@ std::map<std::string, std::function<uint8_t()>> *tcp_message_handlers =
            Serial.print("Sending status");
            String result("");
            result += String("status") + String(":");
-           result += String(evse.status.isEVConnected) + String(",");
-           result += String(evse.status.isChargingEnabled) + String(",");
-           result += String(evse.status.isCharging) + String(",");
-           result += String(evse.status.error) + String(",");
+           result += String(evse.getStatus().getIsEVConnected()) + String(",");
+           result += String(evse.getStatus().getIsChargingEnabled()) + String(",");
+           result += String(evse.getStatus().getIsCharging()) + String(",");
+           result += String(evse.getStatus().getError()) + String(",");
            WIFI_API()->writeToAuthenticatedClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
            return 0;
          }},
@@ -65,8 +65,8 @@ std::map<std::string, std::function<uint8_t()>> *tcp_message_handlers =
            Serial.print("Sending metervalues");
            String result("");
            result += String("metervalues") + String(":");
-           result += String(evse.status.energy) + String(","); // Energy active net
-           result += String(evse.status.power) + String(",");  // Power active import
+           result += String(evse.getStatus().getEnergy()) + String(","); // Energy active net
+           result += String(evse.getStatus().getPower()) + String(",");  // Power active import
            WIFI_API()->writeToAuthenticatedClient(EVSE_WIFI_CONTROL_CLIENT, result.c_str());
            return 0;
          }},

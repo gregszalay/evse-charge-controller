@@ -10,26 +10,50 @@
 
 class EVSEStatus
 {
-public:
     uint8_t isEVConnected = 0;
     uint8_t isChargingEnabled = 0;
     uint8_t isCharging = 0;
     uint8_t error = 0;
     int32_t power = 0;
     int32_t energy = 0;
+
+public:
+    uint8_t getIsEVConnected()
+    {
+        return isEVConnected;
+    }
+    uint8_t getIsChargingEnabled()
+    {
+        return isChargingEnabled;
+    }
+    uint8_t getIsCharging()
+    {
+        return isCharging;
+    }
+    uint8_t getError()
+    {
+        return error;
+    }
+    int32_t getPower()
+    {
+        return power;
+    }
+    int32_t getEnergy()
+    {
+        return energy;
+    }
+    friend class EVSE;
 };
 
 class EVSE
 {
-private:
     bool charging_allowed = false;
-
-public:
     ControlPilot cp;
     ProximityPilot pp;
     Contactor cont;
     EVSEStatus status;
 
+public:
     EVSE()
     {
         // Make sure the contactor is in an off state to start with
@@ -59,6 +83,12 @@ public:
         pp.start();
         taskify("EVSE Task", 10000, this, 1, NULL);
     }
+
+    inline EVSEStatus getStatus()
+    {
+        return this->status;
+    }
+
     inline void setChargingAllowed(bool isAllowed)
     {
         this->charging_allowed = isAllowed;
