@@ -57,15 +57,15 @@ public:
 
 class ControlPilot
 {
-    CPCallbacks callbacks;
     CPGenerator generator;
 
 public:
+    CPCallbacks callbacks;
     CPVoltageReader voltage_reader;
     inline void start()
     {
         voltage_reader.start();
-        generator.start();
+        generator.startConstantVoltage();
         taskify("CP Task", 10000, this, 1, NULL);
     };
 

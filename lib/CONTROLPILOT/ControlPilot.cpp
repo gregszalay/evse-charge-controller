@@ -69,12 +69,14 @@ void ControlPilot::loop()
     if (max_prev == CP_LEVELS::RANGE_12_V && max == CP_LEVELS::RANGE_9_V)
     {
         Serial.println("A => B state transition!");
+        generator.startPWM();
         LEDS_CP_STATE_B();
         (callbacks.A_B)();
     }
     else if (max_prev == CP_LEVELS::RANGE_9_V && max == CP_LEVELS::RANGE_12_V)
     {
         Serial.println("B => A state transition!");
+        generator.stopPWM();
         LEDS_CP_STATE_A();
         (callbacks.B_A)();
     }
@@ -108,12 +110,14 @@ void ControlPilot::loop()
     else if (max_prev == CP_LEVELS::RANGE_12_V && max == CP_LEVELS::RANGE_0_V)
     {
         Serial.println("A => E state transition!");
+        generator.stopPWM();
         LEDS_CP_STATE_E();
         (callbacks.B_E)();
     }
     else if (max_prev == CP_LEVELS::RANGE_9_V && max == CP_LEVELS::RANGE_0_V)
     {
         Serial.println("B => E state transition!");
+        generator.stopPWM();
         LEDS_CP_STATE_E();
         (callbacks.B_E)();
     }
@@ -157,6 +161,7 @@ void ControlPilot::loop()
     else if (max_prev != CP_LEVELS::RANGE_12_V && max == CP_LEVELS::RANGE_12_V)
     {
         Serial.println("X => A state transition!");
+        generator.stopPWM();
         LEDS_CP_STATE_A();
     }
 

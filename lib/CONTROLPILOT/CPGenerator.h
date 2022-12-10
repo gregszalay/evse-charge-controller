@@ -10,13 +10,31 @@ class CPGenerator
     uint8_t current_duty_cycle_percent = 255;
 
 public:
-    void start()
+    void startConstantVoltage()
+    {
+        pinMode(PWM_PIN, OUTPUT);
+        pinMode(PWM_PIN_2, OUTPUT);
+        pinMode(PWM_PIN_3, OUTPUT);
+        digitalWrite(PWM_PIN, HIGH);
+        digitalWrite(PWM_PIN_2, HIGH);
+        digitalWrite(PWM_PIN_3, HIGH);
+    }
+
+    void startPWM()
     {
         ledcSetup(CHANNEL, FREQ_HZ, RESOLUTION);
         ledcAttachPin(PWM_PIN, CHANNEL);
         ledcAttachPin(PWM_PIN_2, CHANNEL);
         ledcAttachPin(PWM_PIN_3, CHANNEL);
         setDutyCyclePercent(DEFAULT_DUTY_CYCLE_PERCENT);
+    }
+
+    void stopPWM()
+    {
+        ledcDetachPin(PWM_PIN);
+        ledcDetachPin(PWM_PIN_2);
+        ledcDetachPin(PWM_PIN_3);
+        startConstantVoltage();
     }
 
     void setDutyCyclePercent(uint8_t percent)

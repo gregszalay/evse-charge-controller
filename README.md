@@ -39,13 +39,19 @@ The purpose of this circuit is to establish PWM communication with the EV (CP ci
 
 Detailed specification: CP: _IEC 61851-1:2017, Annex A_, PP: _IEC 61851-1:2017, Annex B, B.2_
 
+**IEC diagram:**
+
+![IEC_CP_CIRCUIT](docs/IEC_CP_CIRCUIT.png)
+
+**My implementation:**
+
 Interactive diagram: https://tinyurl.com/2kqn36ny
 
 ![CP_PP](docs/CP-PP.png)
 
 #### 1.B. Contactor drive circuit
 
-Interactive diagram: https://tinyurl.com/2aohd9gd
+Interactive diagram: https://tinyurl.com/2dwejsee
 
 ![contactor](docs/contactor.png)
 
@@ -114,8 +120,6 @@ On boot, a TCP server will start and will be listening for client connections ov
 
 #### Responses sent by the EVSE
 
-Responses are in the following format [HEADER]:[CSV_VALUE_1],[CSV_VALUE_2],[CSV_VALUE_3],...
-
 ##### Response to **start\n**
 
 | Section     | Value          | Meaning                                 |
@@ -123,7 +127,7 @@ Responses are in the following format [HEADER]:[CSV_VALUE_1],[CSV_VALUE_2],[CSV_
 | HEADER      | "command"      | The response type is a command response |
 | CSV_VALUE_1 | "OK" / "ERROR" | The command succeeded or failed         |
 
-example response: "command:OK,"
+example response: "OK,"
 
 ##### Response to **stop\n**
 
@@ -132,17 +136,17 @@ example response: "command:OK,"
 | HEADER      | "command"      | The response type is a command response |
 | CSV_VALUE_1 | "OK" / "ERROR" | The command succeeded or failed         |
 
-example response: "command:OK,"
+example response: "OK,"
 
 ##### Response to **status?\n**
 
-| Section     | Value    | Meaning                                                               |
-| ----------- | -------- | --------------------------------------------------------------------- |
-| HEADER      | "status" | The response type is a status response                                |
-| CSV_VALUE_1 | 1 / 0    | An EV is plugged in or not                                            |
-| CSV_VALUE_2 | 1 / 0    | Charging allowed or not (by an external command)                      |
-| CSV_VALUE_3 | 1 / 0    | Charging is in progress oer not (determined by internal charge logic) |
-| CSV_VALUE_4 | 1 / 0    | EVSE is in an error state (CP E or F state) or not                    |
+| Section     | Value     | Meaning                                                               |
+| ----------- | --------- | --------------------------------------------------------------------- |
+| HEADER      | "status:" | The response type is a status response                                |
+| CSV_VALUE_1 | 1 / 0     | An EV is plugged in or not                                            |
+| CSV_VALUE_2 | 1 / 0     | Charging allowed or not (by an external command)                      |
+| CSV_VALUE_3 | 1 / 0     | Charging is in progress oer not (determined by internal charge logic) |
+| CSV_VALUE_4 | 1 / 0     | EVSE is in an error state (CP E or F state) or not                    |
 
 example response: "status:1,0,0,0,"
 
@@ -150,7 +154,7 @@ example response: "status:1,0,0,0,"
 
 | Section     | Value              | Meaning                                      |
 | ----------- | ------------------ | -------------------------------------------- |
-| HEADER      | "metervalues"      | The response type is a meter values response |
+| HEADER      | "metervalues:"     | The response type is a meter values response |
 | CSV_VALUE_1 | fixed point number | Energy active net (Wh). Integer.             |
 | CSV_VALUE_2 | fixed point number | Power active import (W). Integer.            |
 
