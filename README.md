@@ -47,13 +47,13 @@ Detailed specification: CP: _IEC 61851-1:2017, Annex A_, PP: _IEC 61851-1:2017, 
 
 Interactive diagram: https://tinyurl.com/2kqn36ny
 
-![CP_PP](docs/CP-PP.png)
+![CP_PP](docs/CP-PP_inverted.png)
 
 #### 1.B. Contactor drive circuit
 
 Interactive diagram: https://tinyurl.com/2dwejsee
 
-![contactor](docs/contactor.png)
+![contactor](docs/contactor_inverted.png)
 
 ### 2. EVSE SIMULATOR IMPLEMENTATION (built, tested)
 
@@ -61,13 +61,13 @@ Interactive diagram: https://tinyurl.com/2dwejsee
 
 This circuit is designed to simulate ADC readings of the CP and PP circuits.
 
-Interactive diagram: https://tinyurl.com/2pnmm4mg
+Interactive diagram: https://tinyurl.com/2l636mwc
 
-![sim_impl](docs/sim_CP-PP.png)
+![sim_impl](docs/sim_CP-PP_inverted.png)
 
 #### 2.B. Status indicator leds
 
-![sim_leds](docs/sim_status_leds.png)
+![sim_leds](docs/sim_status_leds_inverted.png)
 
 #### 2.C. Finished implementation:
 
